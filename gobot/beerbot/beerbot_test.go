@@ -2,7 +2,6 @@ package beerbot_test
 
 import (
 	. "github.com/joek/beerbot/gobot/beerbot"
-	"github.com/joek/beerbot/testhelpers"
 	"github.com/joek/picoborgrev/revtesthelpers"
 
 	. "github.com/onsi/ginkgo"
@@ -10,12 +9,12 @@ import (
 )
 
 var _ = Describe("Beerbot", func() {
-	var motorA *testhelpers.FakeRevDriver
-	var motorB *testhelpers.FakeRevDriver
+	var motorA *revtesthelpers.FakeRevDriver
+	var motorB *revtesthelpers.FakeRevDriver
 
 	BeforeEach(func() {
-		motorA = testhelpers.NewFakeRevDriver()
-		motorB = testhelpers.NewFakeRevDriver()
+		motorA = revtesthelpers.NewFakeRevDriver()
+		motorB = revtesthelpers.NewFakeRevDriver()
 	})
 
 	It("Creates a new BeerBotDriver instance", func() {
