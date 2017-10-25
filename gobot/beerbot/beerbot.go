@@ -3,9 +3,9 @@ package beerbot
 import (
 	"sync"
 
-	"github.com/hybridgroup/gobot"
-	"github.com/hybridgroup/gobot/platforms/i2c"
 	"github.com/joek/picoborgrev"
+	"gobot.io/x/gobot"
+	"gobot.io/x/gobot/drivers/i2c"
 )
 
 var _ gobot.Driver = (*BeerBotDriver)(nil)
@@ -14,8 +14,8 @@ var _ gobot.Driver = (*BeerBotDriver)(nil)
 type BeerBot interface {
 	Name() string
 	Connection() gobot.Connection
-	Start() []error
-	Halt() []error
+	Start() error
+	Halt() error
 	SetMotorLeft(float32) error
 	SetMotorRight(float32) error
 }
@@ -45,52 +45,57 @@ func (d *BeerBotDriver) Name() string {
 	return d.name
 }
 
+// SetName is setting bot name
+func (d *BeerBotDriver) SetName(n string) {
+	d.name = n
+}
+
 // Connection is returning the i2c connection
 func (d *BeerBotDriver) Connection() gobot.Connection {
 	return d.connection
 }
 
 // Start is starting the robot
-func (d *BeerBotDriver) Start() []error {
+func (d *BeerBotDriver) Start() error {
 	d.lock.Lock()
 	defer d.lock.Unlock()
 
-	errors := d.motorA.Start()
-	if errors != nil {
-		return errors
+	error := d.motorA.Start()
+	if error != nil {
+		return error
 	}
 
-	errors = d.motorB.Start()
-	if errors != nil {
-		return errors
+	error = d.motorB.Start()
+	if error != nil {
+		return error
 	}
 
 	err := d.motorB.ResetEPO()
 	if err != nil {
-		return []error{err}
+		return err
 	}
 
 	err = d.motorA.ResetEPO()
 	if err != nil {
-		return []error{err}
+		return err
 	}
 
 	return nil
 }
 
 // Halt is stopping the robot
-func (d *BeerBotDriver) Halt() []error {
+func (d *BeerBotDriver) Halt() error {
 	d.lock.Lock()
 	defer d.lock.Unlock()
 
-	errors := d.motorA.Halt()
-	if errors != nil {
-		return errors
+	error := d.motorA.Halt()
+	if error != nil {
+		return error
 	}
 
-	errors = d.motorB.Halt()
-	if errors != nil {
-		return errors
+	error = d.motorB.Halt()
+	if error != nil {
+		return error
 	}
 
 	return nil

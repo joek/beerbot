@@ -8,17 +8,18 @@ import (
 
 	"github.com/joek/robotwebhandlers/ws"
 
-	"github.com/hybridgroup/gobot"
-	"github.com/hybridgroup/gobot/platforms/raspi"
 	"github.com/joek/beerbot/gobot/beerbot"
 	"github.com/joek/picoborgrev"
 	"github.com/joek/robotwebhandlers/webcam"
+	"gobot.io/x/gobot"
+	"gobot.io/x/gobot/platforms/raspi"
 )
 
 func main() {
 	var addr = flag.String("addr", ":8080", "http service address")
 	var webcamHost = flag.String("webcamHost", "localhost", "Host of webcam image.")
 	var webcamPort = flag.Uint("webcamPort", 8080, "Port of webcam image.")
+	var assetPath = flag.String("assetPath", "./assets", "Path to html assets.")
 
 	flag.Parse()
 
@@ -26,10 +27,7 @@ func main() {
 	h := ws.NewHub(com)
 	go h.Run()
 
-	gbot := gobot.NewGobot()
-	gbot.AutoStop = false
-
-	r := raspi.NewRaspiAdaptor("raspi")
+	r := raspi.NewAdaptor()
 	motorA := picoborgrev.NewDriver(r, "motorA", 10)
 	motorB := picoborgrev.NewDriver(r, "motorB", 11)
 	beer := beerbot.NewBeerBotDriver(r, "rev", motorA, motorB)
@@ -55,10 +53,8 @@ func main() {
 		work,
 	)
 
-	gbot.AddRobot(robot)
-
-	go gbot.Start()
-	defer gbot.Stop()
+	go robot.Start()
+	defer robot.Stop()
 
 	webcamURL := fmt.Sprintf("%s:%d", *webcamHost, *webcamPort)
 	wh := webcam.NewHandler(
@@ -67,7 +63,7 @@ func main() {
 
 	http.HandleFunc("/webcam", func(w http.ResponseWriter, r *http.Request) { wh.Handle(w, r) })
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) { h.ServeWs(w, r) })
-	http.Handle("/", http.FileServer(http.Dir("./assets")))
+	http.Handle("/", http.FileServer(http.Dir(*assetPath)))
 
 	err := http.ListenAndServe(*addr, nil)
 	if err != nil {

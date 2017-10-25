@@ -28,12 +28,12 @@ var _ = Describe("Beerbot", func() {
 		m2 := false
 		epo1 := false
 		epo2 := false
-		motorA.StartImpl = func() []error {
+		motorA.StartImpl = func() error {
 			m1 = true
 			return nil
 		}
 
-		motorB.StartImpl = func() []error {
+		motorB.StartImpl = func() error {
 			m2 = true
 			return nil
 		}
@@ -61,12 +61,12 @@ var _ = Describe("Beerbot", func() {
 	It("Is stopping the robot", func() {
 		stop1 := false
 		stop2 := false
-		motorB.HaltImpl = func() []error {
+		motorB.HaltImpl = func() error {
 			stop1 = true
 			return nil
 		}
 
-		motorA.HaltImpl = func() []error {
+		motorA.HaltImpl = func() error {
 			stop2 = true
 			return nil
 		}

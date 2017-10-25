@@ -3,16 +3,15 @@ package main
 import (
 	"time"
 
-	"github.com/hybridgroup/gobot"
-	"github.com/hybridgroup/gobot/platforms/raspi"
 	"github.com/joek/beerbot/gobot/beerbot"
 	"github.com/joek/picoborgrev"
+	"gobot.io/x/gobot"
+	"gobot.io/x/gobot/platforms/raspi"
 )
 
 func main() {
-	gbot := gobot.NewGobot()
 
-	r := raspi.NewRaspiAdaptor("raspi")
+	r := raspi.NewAdaptor()
 	motorA := picoborgrev.NewDriver(r, "motorA", 10)
 	motorB := picoborgrev.NewDriver(r, "motorB", 11)
 	beer := beerbot.NewBeerBotDriver(r, "rev", motorA, motorB)
@@ -34,7 +33,5 @@ func main() {
 		work,
 	)
 
-	gbot.AddRobot(robot)
-
-	gbot.Start()
+	robot.Start()
 }
