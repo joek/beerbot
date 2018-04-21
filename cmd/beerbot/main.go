@@ -9,7 +9,6 @@ import (
 	"github.com/joek/robotwebhandlers/ws"
 
 	"github.com/joek/beerbot/gobot/beerbot"
-	"github.com/joek/picoborgrev"
 	"github.com/joek/robotwebhandlers/webcam"
 	"gobot.io/x/gobot"
 	"gobot.io/x/gobot/platforms/raspi"
@@ -28,9 +27,7 @@ func main() {
 	go h.Run()
 
 	r := raspi.NewAdaptor()
-	motorA := picoborgrev.NewDriver(r, "motorA", 10)
-	motorB := picoborgrev.NewDriver(r, "motorB", 11)
-	beer := beerbot.NewBeerBotDriver(r, "rev", motorA, motorB)
+	beer := beerbot.NewBeerBotDriver(r)
 
 	work := func() {
 

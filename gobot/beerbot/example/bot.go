@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/joek/beerbot/gobot/beerbot"
-	"github.com/joek/picoborgrev"
 	"gobot.io/x/gobot"
 	"gobot.io/x/gobot/platforms/raspi"
 )
@@ -12,9 +11,8 @@ import (
 func main() {
 
 	r := raspi.NewAdaptor()
-	motorA := picoborgrev.NewDriver(r, "motorA", 10)
-	motorB := picoborgrev.NewDriver(r, "motorB", 11)
-	beer := beerbot.NewBeerBotDriver(r, "rev", motorA, motorB)
+
+	beer := beerbot.NewBeerBotDriver(r)
 
 	work := func() {
 		beer.SetMotorLeft(0.5)

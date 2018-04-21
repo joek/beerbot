@@ -11,15 +11,18 @@ import (
 var _ = Describe("Beerbot", func() {
 	var motorA *revtesthelpers.FakeRevDriver
 	var motorB *revtesthelpers.FakeRevDriver
+	var d *BeerBotDriver
 
 	BeforeEach(func() {
 		motorA = revtesthelpers.NewFakeRevDriver()
 		motorB = revtesthelpers.NewFakeRevDriver()
+		d = NewBeerBotDriver(revtesthelpers.NewI2cTestAdaptor(revtesthelpers.NewI2cFakeConnection()))
+		d.SetMotorA(motorA)
+		d.SetMotorB(motorB)
 	})
 
 	It("Creates a new BeerBotDriver instance", func() {
-		var d *BeerBotDriver
-		d = NewBeerBotDriver(revtesthelpers.NewI2cTestAdaptor("adaptor"), "Test", motorA, motorB)
+
 		Ω(d).Should(BeAssignableToTypeOf(&BeerBotDriver{}))
 	})
 
@@ -48,7 +51,6 @@ var _ = Describe("Beerbot", func() {
 			return nil
 		}
 
-		d := NewBeerBotDriver(revtesthelpers.NewI2cTestAdaptor("adaptor"), "Test", motorA, motorB)
 		d.Start()
 
 		Ω(m1).Should(BeTrue())
@@ -71,7 +73,6 @@ var _ = Describe("Beerbot", func() {
 			return nil
 		}
 
-		d := NewBeerBotDriver(revtesthelpers.NewI2cTestAdaptor("adaptor"), "Test", motorA, motorB)
 		d.Halt()
 
 		Ω(stop1).Should(BeTrue())
@@ -79,19 +80,8 @@ var _ = Describe("Beerbot", func() {
 	})
 
 	It("Is returning name", func() {
-
-		d := NewBeerBotDriver(revtesthelpers.NewI2cTestAdaptor("adaptor"), "Test", motorA, motorB)
 		d.Halt()
-
-		Ω(d.Name()).Should(Equal("Test"))
-	})
-
-	It("Is returning connection", func() {
-		i := revtesthelpers.NewI2cTestAdaptor("adaptor")
-		d := NewBeerBotDriver(i, "Test", motorA, motorB)
-		d.Halt()
-
-		Ω(d.Connection()).Should(Equal(i))
+		Ω(d.Name()).Should(ContainSubstring("BeerBot-"))
 	})
 
 	It("Is setting left Motors", func() {
@@ -107,7 +97,6 @@ var _ = Describe("Beerbot", func() {
 			return nil
 		}
 
-		d := NewBeerBotDriver(revtesthelpers.NewI2cTestAdaptor("adaptor"), "Test", motorA, motorB)
 		d.SetMotorLeft(0.32)
 
 		Ω(m1).Should(Equal(float32(0.32)))
@@ -127,7 +116,6 @@ var _ = Describe("Beerbot", func() {
 			return nil
 		}
 
-		d := NewBeerBotDriver(revtesthelpers.NewI2cTestAdaptor("adaptor"), "Test", motorA, motorB)
 		d.SetMotorRight(0.32)
 
 		Ω(m1).Should(Equal(float32(-0.32)))

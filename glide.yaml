@@ -1,0 +1,17 @@
+package: github.com/joek/beerbot
+import:
+- package: github.com/joek/picoborgrev
+- package: github.com/joek/robotwebhandlers
+  subpackages:
+  - webcam
+  - ws
+- package: gobot.io/x/gobot
+  version: ~1.7.1
+  subpackages:
+  - drivers/i2c
+  - platforms/raspi
+testImport:
+- package: github.com/onsi/ginkgo
+  version: ~1.4.0
+- package: github.com/onsi/gomega
+  version: ~1.2.0
